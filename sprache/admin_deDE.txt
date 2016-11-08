@@ -1,3 +1,0 @@
-description = <p>Überträgt den angegebenen Code in den Dokumentenkopf '&lt;head&gt;&lt;/head&gt;' der aktuellen Seite.<br />Zeichen, die zur mozilo-Syntax gehören, müssen im Code mit einem ^ (Hochdach) maskiert werden.</p>
-example = Beispiel
-licence = Lizenz

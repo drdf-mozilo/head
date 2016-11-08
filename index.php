@@ -1,124 +1,158 @@
-<?php if(!defined('IS_CMS')){ die();}
+<?php
+if (! defined('IS_CMS')) {
+    die();
+}
 
-class head extends Plugin {
+/**
+ *
+ * @author David Ringsdorf <git@drdf.de>
+ * @copyright (c) 2016, David Ringsdorf
+ * @license The MIT License (MIT)
+ */
+class head extends Plugin
+{
 
     const NAME = __CLASS__;
-    const VERSION = '1.0.0';
+
+    const VERSION = '1.1.0';
+
     const AUTHOR = 'David Ringsdorf';
-    const DOKU_URL = 'http://mozilo.drdf.de';
-    const LICENSE = 'MIT';
+
+    const DOKU_URL = 'http://mozilo.davidringsdorf.de';
 
     const MOZILO_VERSION = '2.0';
 
-    const DS = DIRECTORY_SEPARATOR;
-    const BASE_DIR = __DIR__; // $this->PLUGIN_SELF_DIR
+    private $_moziloSyntaxService;
 
-    const LANG_DIR_NAME = 'sprache'; // 'sprache' ist von mozilo vorgegeben
-    const LANG_FILE_SUFFIX = '.txt';
-    const LANG_FILE_PREFIX_ADMIN = 'admin_';
+    private $_languageObject;
 
-    private $syntax;
-    private $adminConf;
+    private $_pluginTemplateDir;
 
-    private $adminLang;
-    private $adminLanguage ;
-
-    // Damit Styles nicht mitten im Code stehen. Eine Template-Datei lohnt hier nicht.
-    private $style_plugin_name = '<b>%s</b> %s';
-    private $style_license = '<p>%s:<br /><br /><small>%s</small></p>';
-
-    private $code_example = '<pre><code>{head|<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- head-Plugin --&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;style type="text/css"&gt; h1 ^{background-color: #f00;^} &lt;/style&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;script type="text/javascript"&gt; document.write("Hello World!") &lt;/script&gt;<br />}</code></pre>';
+    private $_licenceFile;
 
     /**
-     * Stellt die Arbeitsgrundlage bereit
-     * 
-     * Muss den 'parent-constructor' aufrufen.
-     * 
-     * @global obj $ADMIN_CONF
-     * @global obj $syntax
+     *
+     * @global Syntax $syntax
      */
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
 
         global $syntax;
-        global $ADMIN_CONF;
 
-        $this->syntax = $syntax;
-        $this->adminConf = $ADMIN_CONF;
+        $languageFile = $this->PLUGIN_SELF_DIR . 'language' . DIRECTORY_SEPARATOR . $this->_fetchLanguageKey() . '.txt';
 
-        if( is_object( $this->adminConf ) ){
-            $this->adminLang = $this->adminConf->get('language');
-            $this->adminLanguage = new Language(
-                        self::BASE_DIR 
-                        .self::DS
-                        .self::LANG_DIR_NAME
-                        .self::DS
-                        .self::LANG_FILE_PREFIX_ADMIN
-                        .$this->adminLang
-                        .self::LANG_FILE_SUFFIX
-                    );
-        } 
+        $this->_moziloSyntaxService = $syntax;
+        $this->_languageObject = new Language($languageFile);
+        $this->_pluginTemplateDir = $this->PLUGIN_SELF_DIR . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
+        $this->_licenceFile = $this->PLUGIN_SELF_DIR . DIRECTORY_SEPARATOR . 'licence.txt';
     }
 
     /**
-     * Schreibt $value ungeprueft in den head-Bereich des HTML Dokuments
-     * 
-     * Nutzt die Methoden 'syntax_html()' und 'insert_in_head()'
-     * der mozilo-Klasse 'Syntax'
-     * 
-     * @param string $value Der dem Plugin uebergebene Value-String {head|value}
+     *
+     * @param string $value
+     * @return string ist immer leer
      */
-    public function getContent($value) {
-        if((bool) $value ){
-            $value = $this->syntax->syntax_html( NULL, $value);
-            $this->syntax->insert_in_head( $value );
-        }   
+    public function getContent($value)
+    {
+        if (is_string($value) && strlen($value) > 0) {
+            $this->_moziloSyntaxService->insert_in_head($this->_moziloSyntaxService->syntax_html(NULL, $value));
+        }
+        return '';
     }
 
     /**
-     * Keine Verwendung, muss aber vorhanden sein.
+     *
+     * @return array
      */
-    public function getConfig() {}
+    public function getDefaultSettings()
+    {
+        return [
+            'show_placeholder' => 'true'
+        ];
+    }
 
     /**
-    * Gibt die Plugin-Infos als Array zurueck.
-    *
-    * Diese Funktion wird von mozilo verlangt.
-    * Gibt die Plugin-Infos als Array zurueck. 
-    * Die geforderten Infos werden aus den Objekt-Eigenschaften
-    * und der Sprachdatei gewonnen.
-    * Die Reihenfolge ist durch mozilo verbindlich:
-    * [0] Name und Version des Plugins.
-    * [1] Benoetigte moziloCMS-Version.
-    * [2] Kurzbeschreibung.
-    * [3] Name des Autors.
-    * [4] Webseite.
-    * [5] (optional) Platzhalter die im Seiten-Editor vorgeschlagen werden.
-    *
-    * @return array Die Reihenfolge der Array-Values muss stimmen.
-    */
-    public function getInfo() {
-        return array(
-            // [0]
-            sprintf($this->style_plugin_name, self::NAME, self::VERSION)
-            // [1]
-            ,self::MOZILO_VERSION
-            // [2]
-            ,$this->adminLanguage->getLanguageValue('description')
-                .$this->adminLanguage->getLanguageValue('example')
-                .$this->code_example
-                .sprintf(
-                    $this->style_license
-                    ,$this->adminLanguage->getLanguageValue('licence')
-                    ,nl2br( file_get_contents( self::BASE_DIR.self::DS.'licence.txt' ))
-                )
-            // [3]
-            ,self::AUTHOR
-            // [4]
-            ,array(
-                self::DOKU_URL
-                ,substr( self::DOKU_URL, strlen('http://') )
-            )
-        );
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return [
+            'show_placeholder' => [
+                'type' => 'checkbox',
+                'description' => $this->_languageObject->getLanguageValue('config.show_placeholder.description')
+            ]
+        ];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getInfo()
+    {
+        $showPlaceholder = filter_var($this->settings->get('show_placeholder'), FILTER_VALIDATE_BOOLEAN);
+
+        // Name und Version des Plugins.
+        // Den Pluginnamen in `<b> ... </b>` zu fassen, wird von mozilo vorgeschlagen.
+        $info[0] = '<b>' . self::NAME . '</b> ' . self::VERSION;
+
+        // Benoetigte moziloCMS-Version.
+        $info[1] = self::MOZILO_VERSION;
+
+        // Kurzbeschreibung.
+        $info[2] = $this->_template('admin_description', $this->_languageObject, [
+            'licence.text' => nl2br(file_get_contents($this->_licenceFile))
+        ]);
+
+        // Name des Autors.
+        $info[3] = self::AUTHOR;
+
+        // Webseite.
+        $info[4] = self::DOKU_URL;
+
+        // (optional) Platzhalter der im Seiten-Editor vorgeschlagen wird.
+        if ($showPlaceholder) {
+            $info[5] = [
+                '{' . __CLASS__ . '|...}' => $this->_languageObject->getLanguageValue('info.placeholder.title')
+            ];
+        }
+
+        return $info;
+    }
+
+    /**
+     *
+     * @global Properties $ADMIN_CONF
+     * @global Properties $CMS_CONF
+     * @return string
+     */
+    private function _fetchLanguageKey()
+    {
+        global $ADMIN_CONF, $CMS_CONF;
+
+        $language = $CMS_CONF->get('cmslanguage');
+        if (IS_ADMIN) {
+            $language = $ADMIN_CONF->get('language');
+        }
+
+        return $language;
+    }
+
+    /**
+     *
+     * @param string $templateName
+     * @param Language $languageObject
+     * @param array|NULL $param
+     * @return string
+     */
+    private function _template($templateName, Language $languageObject = NULL, $param = NULL)
+    {
+        ob_start();
+        $t = $languageObject;
+        $p = $param;
+        require $this->_pluginTemplateDir . $templateName . '.php';
+        return (string) ob_get_clean();
     }
 }

@@ -4,8 +4,8 @@ head - ein moziloCMS Plugin
 Beschreibung
 ------------
 
-Überträgt den angegebenen Code in den Dokumentenkopf '<head></head>' der aktuellen Seite.
-Zeichen, die zur mozilo-Syntax gehören, müssen im Code mit einem ^ (Hochdach) maskiert werden.
+Überträgt den angegebenen Code in den Dokumentenkopf `<head></head>` der aktuellen Seite.
+Zeichen, die zur mozilo-Syntax gehören, müssen im Code mit einem `^` (Hochdach) maskiert werden.
 
 Beispiel
 --------

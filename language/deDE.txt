@@ -1,0 +1,7 @@
+info.description.description_header = Beschreibung
+info.description.description_text   = Überträgt den angegebenen Code in den Dokumentenkopf <code>&lt;head&gt;&lt;/head&gt;</code> der aktuellen Seite.<br />Zeichen, die zur mozilo-Syntax gehören, müssen im Code mit einem <code>^</code> (Hochdach) maskiert werden.
+info.description.example_header     = Beispiel
+info.description.licence_header     = Lizenz
+info.placeholder.title              = Überträgt den angegebenen Code in den Dokumentenkopf &lt;head&gt;&lt;/head&gt; der aktuellen Seite.
+
+config.show_placeholder.description = <code>{head|...}</code> in der Plugin-Auswahl-Liste des Editors anzeigen.
