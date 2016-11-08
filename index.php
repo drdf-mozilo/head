@@ -14,7 +14,7 @@ class head extends Plugin
 
     const NAME = __CLASS__;
 
-    const VERSION = '1.1.0-rc1';
+    const VERSION = '1.1.0';
 
     const AUTHOR = 'David Ringsdorf';
 
