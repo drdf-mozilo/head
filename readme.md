@@ -1,5 +1,11 @@
-head - ein moziloCMS Plugin
-===========================
+
+⚠️ **Hinweis**: Dieses Plugin wird nicht mehr gepflegt!  
+(Nov. 2017)
+
+----
+
+head - ein [moziloCMS](http://www.mozilo.de/) Plugin
+====================================================
 
 Beschreibung
 ------------
@@ -15,3 +21,13 @@ Beispiel
         <style type="text/css"> h1 ^{background-color: #f00;^} </style>
         <script type="text/javascript"> document.write("Hello World!") </script>
     }
+
+Lizenz
+------
+
+[MIT License](licence.txt)
+
+Autor
+-----
+
+[David Ringsdorf](http://davidringsdorf.de)

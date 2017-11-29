@@ -3,5 +3,6 @@ info.description.description_text   = Überträgt den angegebenen Code in den Do
 info.description.example_header     = Beispiel
 info.description.licence_header     = Lizenz
 info.placeholder.title              = Überträgt den angegebenen Code in den Dokumentenkopf &lt;head&gt;&lt;/head&gt; der aktuellen Seite.
+info.description.warning            = <mark><strong>⚠️ Hinweis</strong>: Dieses Plugin wird nicht mehr gepflegt!</mark> (Nov. 2017)
 
 config.show_placeholder.description = <code>{head|...}</code> in der Plugin-Auswahl-Liste des Editors anzeigen.
